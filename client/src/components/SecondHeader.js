@@ -1,33 +1,37 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const SecondHeader = ({ onUpload }) => {
+const SecondHeader = ({ onUpload, onCreateAlbum }) => {
   const navigate = useNavigate();
-  const [selectedImages, setSelectedImages] = useState([]);
 
-  // Function to handle the 'Create' button click
   const handleCreate = () => {
-    // Add the functionality for 'Create' button here
-    console.log('Create button clicked');
+    const albumName = prompt('Enter the name of the album:');
+    if (albumName) {
+      onCreateAlbum(albumName);
+    }
   };
 
-  // Function to handle the 'Upload' button click
   const handleUpload = (event) => {
-    const files = event.target.files;
-    const newImages = Array.from(files).map((file) => ({
-      file,
-      uploadDate: new Date(),
-      objectURL: URL.createObjectURL(file), // Store the object URL directly
-    }));
-  
-    setSelectedImages((prevImages) => [...prevImages, ...newImages]);
-    onUpload(newImages);
-    console.log('Upload button clicked');
+    // Input type file is needed to access the files property
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.multiple = true;
+
+    // Trigger input click when the button is clicked
+    input.click();
+
+    // Handle the file selection
+    input.addEventListener('change', (event) => {
+      const files = event.target.files;
+      if (files.length > 0) {
+        const fileArray = Array.from(files);
+        onUpload(fileArray);
+      }
+    });
   };
 
-  // Function to handle the search bar input
   const handleSearch = (event) => {
-    // Add the functionality for the search bar here
     console.log('Search:', event.target.value);
   };
 
@@ -44,18 +48,14 @@ const SecondHeader = ({ onUpload }) => {
           Your project description goes here.
         </p>
 
-        {/* 'Create' button */}
         <button className="btn-primary mr-4" onClick={handleCreate}>
           Create
         </button>
 
-        {/* 'Upload' button */}
-        <label className="btn-primary mr-4">
+        <button className="btn-primary mr-4" onClick={handleUpload}>
           Upload
-          <input type="file" accept="image/*" multiple onChange={handleUpload} style={{ display: 'none' }} />
-        </label>
+        </button>
 
-        {/* Search bar */}
         <input
           type="text"
           placeholder="Search..."
