@@ -9,7 +9,21 @@ const SecondPage = () => {
 
   // Function to handle image upload
   const handleUpload = (newImages) => {
-    setUploadedImages((prevImages) => [...prevImages, ...newImages]);
+    const imagesWithInfo = newImages.map((image) => {
+      const name = prompt("Enter the name of the image:");
+      const description = prompt("Enter the description of the image:");
+      const tags = prompt("Enter tags for the image (comma-separated):");
+
+      return {
+        file: image.file,
+        data: image.data,
+        name,
+        description,
+        tags: tags ? tags.split(",").map((tag) => tag.trim()) : [],
+      };
+    });
+
+    setUploadedImages((prevImages) => [...prevImages, ...imagesWithInfo]);
   };
 
   // Function to handle image deletion
@@ -67,9 +81,11 @@ const SecondPage = () => {
             <img
               src={selectedImage.data}
               alt="Selected Image"
-              className="w-1/3 mx-auto"
+              className="w-1/2 mx-auto"
             />
-            <p className="mt-2">Filename: {selectedImage.file.name}</p>
+            <p className="mt-2">Name: {selectedImage.name}</p>
+            <p>Description: {selectedImage.description}</p>
+            <p>Tags: {selectedImage.tags.join(", ")}</p>
             {/* Add more information as needed */}
           </div>
         )}
