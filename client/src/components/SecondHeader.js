@@ -73,7 +73,6 @@ const SecondHeader = ({ onUpload }) => {
     const files = event.target.files;
 
     if (files.length > 0) {
-      // Read image files as data URLs
       const uploadedImages = Array.from(files).map((file) => {
         return new Promise((resolve) => {
           const reader = new FileReader();
@@ -84,7 +83,6 @@ const SecondHeader = ({ onUpload }) => {
         });
       });
 
-      // Wait for all promises to resolve and then trigger onUpload
       Promise.all(uploadedImages).then((images) => {
         onUpload(images);
       });
@@ -95,15 +93,24 @@ const SecondHeader = ({ onUpload }) => {
     console.log("Search:", event.target.value);
   };
 
+  const navigateToHome = () => {
+    // Add your logic to navigate to the home page
+    navigate("/");
+  };
+
   return (
     <div className="text-center my-8">
       <div className="mt-4">
+        {/* Make the logo clickable to navigate to the homepage */}
         <img
           src="/logo192.png"
           alt="Small Logo"
-          className="w-12 h-12 mx-auto"
+          className="w-12 h-12 mx-auto cursor-pointer"
+          onClick={navigateToHome}
         />
-        <h1 className="text-4xl font-bold mt-2">Your Project Title</h1>
+        <h1 className="text-4xl font-bold mt-2 cursor-pointer" onClick={navigateToHome}>
+          Your Project Title
+        </h1>
         <p className="text-gray-600 text-sm mt-2">
           Your project description goes here.
         </p>
@@ -112,7 +119,6 @@ const SecondHeader = ({ onUpload }) => {
           Create
         </button>
 
-        {/* Input for file upload */}
         <input
           type="file"
           accept="image/*"
@@ -137,3 +143,4 @@ const SecondHeader = ({ onUpload }) => {
 };
 
 export default SecondHeader;
+
