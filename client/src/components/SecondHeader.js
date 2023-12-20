@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Header = () => {
+const SecondHeader = () => {
   const navigate = useNavigate();
 
   const handleGoToSecondPage = () => {
@@ -22,4 +22,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default SecondHeader;

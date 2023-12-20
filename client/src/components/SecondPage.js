@@ -1,10 +1,10 @@
 import React from 'react';
+import SecondHeader from './SecondHeader';
 
 const SecondPage = () => {
   return (
     <div>
-      <h2 className="text-3xl font-bold my-8">Second Page</h2>
-      {/* Add content for the second page */}
+      <SecondHeader />
     </div>
   );
 };
