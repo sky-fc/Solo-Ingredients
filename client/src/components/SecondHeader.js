@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const SecondHeader = ({ onUpload, onCreateAlbum }) => {
+const SecondHeader = ({ onCreateAlbum }) => {
   const navigate = useNavigate();
 
   const handleCreate = () => {
-    const albumName = prompt('Enter the name of the album:');
+    const albumName = prompt("Enter the name of the album:");
     if (albumName) {
       onCreateAlbum(albumName);
     }
@@ -24,25 +24,18 @@ const SecondHeader = ({ onUpload, onCreateAlbum }) => {
     // Handle the file selection
     input.addEventListener('change', (event) => {
       const files = event.target.files;
-      if (files.length > 0) {
-        const fileArray = Array.from(files);
-        onUpload(fileArray);
-      }
+      // Handle file upload logic if needed
     });
   };
 
   const handleSearch = (event) => {
-    console.log('Search:', event.target.value);
+    console.log("Search:", event.target.value);
   };
 
   return (
     <div className="text-center my-8">
       <div className="mt-4">
-        <img
-          src="/logo192.png"
-          alt="Small Logo"
-          className="w-12 h-12 mx-auto"
-        />
+        <img src="/logo192.png" alt="Small Logo" className="w-12 h-12 mx-auto" />
         <h1 className="text-4xl font-bold mt-2">Your Project Title</h1>
         <p className="text-gray-600 text-sm mt-2">
           Your project description goes here.
