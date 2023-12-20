@@ -7,7 +7,12 @@ const SecondPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [editedImageInfo, setEditedImageInfo] = useState(null);
+  // Initialize editedImageInfo with default values
+  const [editedImageInfo, setEditedImageInfo] = useState({
+    name: "",
+    description: "",
+    tags: [],
+  });
   const [nameError, setNameError] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
   const [tagsError, setTagsError] = useState("");
@@ -202,7 +207,7 @@ const SecondPage = () => {
                 <label className="block mt-2">Tags (comma-separated):</label>
                 <input
                   type="text"
-                  value={editedImageInfo.tags}
+                  value={editedImageInfo.tags.join(", ")}
                   onChange={(e) => handleEditChange("tags", e.target.value)}
                   className="border rounded px-2 py-1"
                 />
