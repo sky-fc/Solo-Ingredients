@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const SecondHeader = () => {
+const SecondHeader = ({ onUpload }) => {
   const navigate = useNavigate();
+  const [selectedImages, setSelectedImages] = useState([]);
 
   // Function to handle the 'Create' button click
   const handleCreate = () => {
@@ -11,14 +12,18 @@ const SecondHeader = () => {
   };
 
   // Function to handle the 'Upload' button click
-  const handleUpload = () => {
-    // Add the functionality for 'Upload' button here
+  const handleUpload = (event) => {
+    const files = event.target.files;
+    const newImages = Array.from(files);
+
+    setSelectedImages((prevImages) => [...prevImages, ...newImages]);
+    onUpload(newImages);
     console.log("Upload button clicked");
   };
 
   // Function to handle the search bar input
   const handleSearch = (event) => {
-    // Add the functionality for search bar here
+    // Add the functionality for the search bar here
     console.log("Search:", event.target.value);
   };
 
@@ -41,9 +46,16 @@ const SecondHeader = () => {
         </button>
 
         {/* 'Upload' button */}
-        <button className="btn-primary mr-4" onClick={handleUpload}>
+        <label className="btn-primary mr-4">
           Upload
-        </button>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleUpload}
+            style={{ display: "none" }}
+          />
+        </label>
 
         {/* Search bar */}
         <input
