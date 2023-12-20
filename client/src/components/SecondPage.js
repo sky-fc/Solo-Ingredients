@@ -4,32 +4,46 @@ import Modal from "react-modal";
 
 const SecondPage = () => {
   const [uploadedImages, setUploadedImages] = useState([]);
-  const [displayedImages, setDisplayedImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editedImageInfo, setEditedImageInfo] = useState(null);
-
+  const [nameError, setNameError] = useState("");
+  const [descriptionError, setDescriptionError] = useState("");
+  const [tagsError, setTagsError] = useState("");
 
   // Function to handle image upload
   const handleUpload = (newImages) => {
     const imagesWithInfo = newImages.map((image) => {
-      const name = prompt('Enter the name of the image:');
-      const description = prompt('Enter the description of the image:');
-      const tags = prompt('Enter tags for the image (comma-separated):');
+      const name = prompt("Enter the name of the image:");
+      const description = prompt("Enter the description of the image:");
+      const tags = prompt("Enter tags for the image (comma-separated):");
 
-      return {
+      const imageInfo = {
         file: image.file,
         data: image.data,
-        name,
-        description,
-        tags: tags ? tags.split(',').map((tag) => tag.trim()) : [],
+        name: name && name.length <= 255 ? name : "",
+        description:
+          description && description.length <= 255 ? description : "",
+        tags: tags
+          ? tags.length <= 255
+            ? tags.split(",").map((tag) => tag.trim())
+            : []
+          : [],
       };
+
+      // Validate image info
+      if (!validateImageInfo(imageInfo)) {
+        console.error("Invalid image information. Please check the input.");
+        return null;
+      }
+
+      return imageInfo;
     });
 
+    const filteredImages = imagesWithInfo.filter((image) => image !== null);
 
-    
-    setUploadedImages((prevImages) => [...prevImages, ...imagesWithInfo]);
+    setUploadedImages((prevImages) => [...prevImages, ...filteredImages]);
   };
 
   // Function to handle image deletion
@@ -58,21 +72,31 @@ const SecondPage = () => {
     setEditedImageInfo({
       name: selectedImage.name,
       description: selectedImage.description,
-      tags: selectedImage.tags ? (Array.isArray(selectedImage.tags) ? selectedImage.tags.join(', ') : '') : '',
-
-
+      tags: selectedImage.tags ? selectedImage.tags : [],
     });
-    
   };
 
   const handleSaveEdit = () => {
+    // Validate edited image info
+    if (!validateImageInfo(editedImageInfo)) {
+      console.error("Invalid image information. Please check the input.");
+      return;
+    }
+
     setUploadedImages((prevImages) =>
       prevImages.map((image) =>
         image === selectedImage
-          ? { ...image, ...editedImageInfo, tags: editedImageInfo.tags.split(',').map((tag) => tag.trim()) }
+          ? {
+              ...image,
+              ...editedImageInfo,
+              tags: editedImageInfo.tags
+                ? editedImageInfo.tags.split(",").map((tag) => tag.trim())
+                : [],
+            }
           : image
       )
     );
+
     setSelectedImage((prevImage) => ({ ...prevImage, ...editedImageInfo }));
     setIsEditMode(false);
   };
@@ -81,9 +105,52 @@ const SecondPage = () => {
     setEditedImageInfo((prevInfo) => ({ ...prevInfo, [field]: value }));
   };
 
+  const validateImageInfo = (imageInfo) => {
+    const { name, description, tags } = imageInfo;
+    let isValid = true;
+
+    // Validate name
+    if (!name || name.length > 255) {
+      setNameError(
+        "Name, description, and tags are required and must be 255 characters or less."
+      );
+      isValid = false;
+    } else {
+      setNameError("");
+    }
+
+    // Validate description
+    if (description && description.length > 255) {
+      setDescriptionError(
+        "Name, description, and tags are required and must be 255 characters or less."
+      );
+      isValid = false;
+    } else {
+      setDescriptionError("");
+    }
+
+    // Validate tags
+    if (tags && typeof tags === "string") {
+      const tagsArray = tags.split(",").map((tag) => tag.trim());
+      if (tagsArray.some((tag) => tag.length > 255)) {
+        setTagsError(
+          "Name, description, and tags are required and must be 255 characters or less."
+        );
+        isValid = false;
+      } else {
+        setTagsError("");
+      }
+    }
+
+    return isValid;
+  };
+
   return (
     <div>
       <SecondHeader onUpload={handleUpload} />
+      {nameError && <p className="text-red-500">{nameError}</p>}
+      {descriptionError && <p className="text-red-500">{descriptionError}</p>}
+      {tagsError && <p className="text-red-500">{tagsError}</p>}
       <div className="mt-4 grid grid-cols-3 gap-4">
         {uploadedImages.map((image, index) => (
           <div key={index} className="relative">
@@ -102,31 +169,41 @@ const SecondPage = () => {
           </div>
         ))}
       </div>
-      <Modal isOpen={isModalOpen} onRequestClose={closeModal} contentLabel="Selected Image">
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Selected Image"
+      >
         {selectedImage && (
           <div>
-            <img src={selectedImage.data} alt="Selected Image" className="w-1/2 mx-auto" />
+            <img
+              src={selectedImage.data}
+              alt="Selected Image"
+              className="w-1/2 mx-auto"
+            />
             {isEditMode ? (
               <>
                 <label className="block mt-4">Name:</label>
                 <input
                   type="text"
                   value={editedImageInfo.name}
-                  onChange={(e) => handleEditChange('name', e.target.value)}
+                  onChange={(e) => handleEditChange("name", e.target.value)}
                   className="border rounded px-2 py-1"
                 />
                 <label className="block mt-2">Description:</label>
                 <input
                   type="text"
                   value={editedImageInfo.description}
-                  onChange={(e) => handleEditChange('description', e.target.value)}
+                  onChange={(e) =>
+                    handleEditChange("description", e.target.value)
+                  }
                   className="border rounded px-2 py-1"
                 />
                 <label className="block mt-2">Tags (comma-separated):</label>
                 <input
                   type="text"
                   value={editedImageInfo.tags}
-                  onChange={(e) => handleEditChange('tags', e.target.value)}
+                  onChange={(e) => handleEditChange("tags", e.target.value)}
                   className="border rounded px-2 py-1"
                 />
                 <button
@@ -140,7 +217,10 @@ const SecondPage = () => {
               <>
                 <p className="mt-2">Name: {selectedImage.name}</p>
                 <p>Description: {selectedImage.description}</p>
-                <p>Tags: {selectedImage.tags ? selectedImage.tags.join(', ') : ''}</p>
+                <p>
+                  Tags:{" "}
+                  {selectedImage.tags ? selectedImage.tags.join(", ") : ""}
+                </p>
 
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded mt-4"

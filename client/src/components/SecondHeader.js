@@ -59,14 +59,14 @@
 
 // export default SecondHeader;
 
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const SecondHeader = ({ onUpload }) => {
   const navigate = useNavigate();
 
   const handleCreate = () => {
-    console.log('Create button clicked');
+    console.log("Create button clicked");
   };
 
   const handleUpload = (event) => {
@@ -92,15 +92,21 @@ const SecondHeader = ({ onUpload }) => {
   };
 
   const handleSearch = (event) => {
-    console.log('Search:', event.target.value);
+    console.log("Search:", event.target.value);
   };
 
   return (
     <div className="text-center my-8">
       <div className="mt-4">
-        <img src="/logo192.png" alt="Small Logo" className="w-12 h-12 mx-auto" />
+        <img
+          src="/logo192.png"
+          alt="Small Logo"
+          className="w-12 h-12 mx-auto"
+        />
         <h1 className="text-4xl font-bold mt-2">Your Project Title</h1>
-        <p className="text-gray-600 text-sm mt-2">Your project description goes here.</p>
+        <p className="text-gray-600 text-sm mt-2">
+          Your project description goes here.
+        </p>
 
         <button className="btn-primary mr-4" onClick={handleCreate}>
           Create
@@ -111,7 +117,7 @@ const SecondHeader = ({ onUpload }) => {
           type="file"
           accept="image/*"
           multiple
-          style={{ display: 'none' }}
+          style={{ display: "none" }}
           onChange={handleUpload}
           id="uploadInput"
         />
