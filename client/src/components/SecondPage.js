@@ -18,13 +18,12 @@ const SecondPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [albums, setAlbums] = useState([]);
 
-  const handleUpload = (newImages) => {
-    const albumName = prompt("Enter the name of the album:");
-    let selectedAlbum = albums.find((album) => album.name === albumName);
+  const handleUpload = (newImages, albumIndex) => {
+    const selectedAlbum = albums[albumIndex];
 
     if (!selectedAlbum) {
-      selectedAlbum = { name: albumName, images: [] };
-      setAlbums((prevAlbums) => [...prevAlbums, selectedAlbum]);
+      console.error("Selected album not found.");
+      return;
     }
 
     const imagesWithInfo = newImages.map((image) => {
@@ -34,7 +33,7 @@ const SecondPage = () => {
 
       const imageInfo = {
         file: image.file,
-        data: image.data,
+        data: URL.createObjectURL(image.file),
         name: name && name.length <= 255 ? name : "",
         description:
           description && description.length <= 255 ? description : "",
@@ -55,7 +54,7 @@ const SecondPage = () => {
 
     const filteredImages = imagesWithInfo.filter((image) => image !== null);
 
-    selectedAlbum.images = [...selectedAlbum.images, ...filteredImages];
+    selectedAlbum.images = [...(selectedAlbum.images || []), ...filteredImages];
     setUploadedImages((prevImages) => [...prevImages, ...filteredImages]);
   };
 
@@ -65,6 +64,14 @@ const SecondPage = () => {
       const updatedImages = [...updatedAlbums[albumIndex].images];
       updatedImages.splice(imageIndex, 1);
       updatedAlbums[albumIndex].images = updatedImages;
+      return updatedAlbums;
+    });
+  };
+
+  const handleDeleteAlbum = (albumIndex) => {
+    setAlbums((prevAlbums) => {
+      const updatedAlbums = [...prevAlbums];
+      updatedAlbums.splice(albumIndex, 1);
       return updatedAlbums;
     });
   };
@@ -176,7 +183,9 @@ const SecondPage = () => {
   return (
     <div>
       <SecondHeader
-        onUpload={handleUpload}
+        onUpload={(newImages, albumIndex) =>
+          handleUpload(newImages, albumIndex)
+        }
         onSearch={handleSearch}
         setSearchQuery={setSearchQuery}
         onCreateAlbum={handleCreateAlbum} // Pass the onCreateAlbum function
@@ -188,6 +197,30 @@ const SecondPage = () => {
         {albums.map((album, albumIndex) => (
           <div key={album.name}>
             <h2 className="text-2xl font-bold mb-2">{album.name}</h2>
+            <button
+              className="bg-red-500 text-white px-2 py-1 rounded mb-2"
+              onClick={() => handleDeleteAlbum(albumIndex)}
+            >
+              Delete Album
+            </button>
+            <label
+              htmlFor={`file-input-${albumIndex}`}
+              className="bg-blue-500 text-white px-2 py-1 rounded mb-2 cursor-pointer"
+            >
+              Upload Images
+            </label>
+            <input
+              type="file"
+              id={`file-input-${albumIndex}`}
+              style={{ display: "none" }}
+              onChange={(e) => {
+                const newImages = Array.from(e.target.files).map((file) => ({
+                  file,
+                }));
+                handleUpload(newImages, albumIndex);
+              }}
+              multiple
+            />
             {album.images.map((image, index) => (
               <div key={index} className="relative">
                 <img
