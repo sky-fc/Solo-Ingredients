@@ -161,7 +161,11 @@ const SecondPage = () => {
   };
 
   const handleSearch = () => {
-    const filteredImages = uploadedImages.filter((image) => {
+    const allImages = albums.reduce(
+      (acc, album) => [...acc, ...album.images],
+      []
+    );
+    const filteredImages = allImages.filter((image) => {
       const { name, description, tags } = image;
 
       return (
@@ -178,6 +182,7 @@ const SecondPage = () => {
   const handleCreateAlbum = (albumName) => {
     const newAlbum = { name: albumName, images: [] };
     setAlbums((prevAlbums) => [...prevAlbums, newAlbum]);
+    setSearchQuery(""); // Reset the search query when creating a new album
   };
 
   return (
