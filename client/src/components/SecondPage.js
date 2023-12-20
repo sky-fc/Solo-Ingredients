@@ -7,7 +7,6 @@ const SecondPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  // Initialize editedImageInfo with default values
   const [editedImageInfo, setEditedImageInfo] = useState({
     name: "",
     description: "",
@@ -16,8 +15,8 @@ const SecondPage = () => {
   const [nameError, setNameError] = useState("");
   const [descriptionError, setDescriptionError] = useState("");
   const [tagsError, setTagsError] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Function to handle image upload
   const handleUpload = (newImages) => {
     const imagesWithInfo = newImages.map((image) => {
       const name = prompt("Enter the name of the image:");
@@ -37,7 +36,6 @@ const SecondPage = () => {
           : [],
       };
 
-      // Validate image info
       if (!validateImageInfo(imageInfo)) {
         console.error("Invalid image information. Please check the input.");
         return null;
@@ -51,7 +49,6 @@ const SecondPage = () => {
     setUploadedImages((prevImages) => [...prevImages, ...filteredImages]);
   };
 
-  // Function to handle image deletion
   const handleDelete = (index) => {
     setUploadedImages((prevImages) => {
       const updatedImages = [...prevImages];
@@ -60,13 +57,11 @@ const SecondPage = () => {
     });
   };
 
-  // Function to open modal and set the selected image
   const openModal = (image) => {
     setSelectedImage(image);
     setIsModalOpen(true);
   };
 
-  // Function to close modal
   const closeModal = () => {
     setSelectedImage(null);
     setIsModalOpen(false);
@@ -82,7 +77,6 @@ const SecondPage = () => {
   };
 
   const handleSaveEdit = () => {
-    // Validate edited image info
     if (!validateImageInfo(editedImageInfo)) {
       console.error("Invalid image information. Please check the input.");
       return;
@@ -114,7 +108,6 @@ const SecondPage = () => {
     const { name, description, tags } = imageInfo;
     let isValid = true;
 
-    // Validate name
     if (!name || name.length > 255) {
       setNameError(
         "Name, description, and tags are required and must be 255 characters or less."
@@ -124,7 +117,6 @@ const SecondPage = () => {
       setNameError("");
     }
 
-    // Validate description
     if (description && description.length > 255) {
       setDescriptionError(
         "Name, description, and tags are required and must be 255 characters or less."
@@ -134,7 +126,6 @@ const SecondPage = () => {
       setDescriptionError("");
     }
 
-    // Validate tags
     if (tags && typeof tags === "string") {
       const tagsArray = tags.split(",").map((tag) => tag.trim());
       if (tagsArray.some((tag) => tag.length > 255)) {
@@ -150,9 +141,30 @@ const SecondPage = () => {
     return isValid;
   };
 
+  const handleSearch = () => {
+    // Perform the search based on the query
+    // You can modify this part to filter images as needed
+    const filteredImages = uploadedImages.filter((image) => {
+      const { name, description, tags } = image;
+
+      return (
+        name.toLowerCase().includes(searchQuery) ||
+        description.toLowerCase().includes(searchQuery) ||
+        (tags && tags.join(", ").toLowerCase().includes(searchQuery))
+      );
+    });
+
+    // Update the state with the filtered images
+    setUploadedImages(filteredImages);
+  };
+
   return (
     <div>
-      <SecondHeader onUpload={handleUpload} />
+      <SecondHeader
+        onUpload={handleUpload}
+        onSearch={handleSearch}
+        setSearchQuery={setSearchQuery}
+      />
       {nameError && <p className="text-red-500">{nameError}</p>}
       {descriptionError && <p className="text-red-500">{descriptionError}</p>}
       {tagsError && <p className="text-red-500">{tagsError}</p>}

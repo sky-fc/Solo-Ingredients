@@ -62,7 +62,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const SecondHeader = ({ onUpload }) => {
+const SecondHeader = ({ onUpload, onSearch, setSearchQuery }) => {
   const navigate = useNavigate();
 
   const handleCreate = () => {
@@ -89,31 +89,17 @@ const SecondHeader = ({ onUpload }) => {
     }
   };
 
-  const handleSearch = (event) => {
-    console.log("Search:", event.target.value);
-  };
-
-  const navigateToHome = () => {
-    // Add your logic to navigate to the home page
-    navigate("/");
+  const handleSearch = () => {
+    // Call the onSearch function with the current search query
+    onSearch();
   };
 
   return (
     <div className="text-center my-8">
       <div className="mt-4">
-        {/* Make the logo clickable to navigate to the homepage */}
-        <img
-          src="/logo192.png"
-          alt="Small Logo"
-          className="w-12 h-12 mx-auto cursor-pointer"
-          onClick={navigateToHome}
-        />
-        <h1 className="text-4xl font-bold mt-2 cursor-pointer" onClick={navigateToHome}>
-          Your Project Title
-        </h1>
-        <p className="text-gray-600 text-sm mt-2">
-          Your project description goes here.
-        </p>
+        <img src="/logo192.png" alt="Small Logo" className="w-12 h-12 mx-auto" />
+        <h1 className="text-4xl font-bold mt-2">Your Project Title</h1>
+        <p className="text-gray-600 text-sm mt-2">Your project description goes here.</p>
 
         <button className="btn-primary mr-4" onClick={handleCreate}>
           Create
@@ -135,8 +121,13 @@ const SecondHeader = ({ onUpload }) => {
           type="text"
           placeholder="Search..."
           className="border rounded px-2 py-1"
-          onChange={handleSearch}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
+
+        {/* Search button */}
+        <button className="btn-primary ml-2" onClick={handleSearch}>
+          Search
+        </button>
       </div>
     </div>
   );
