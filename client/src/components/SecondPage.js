@@ -1,17 +1,3 @@
-// import React from 'react';
-// import SecondHeader from './SecondHeader';
-
-// const SecondPage = () => {
-//   return (
-//     <div>
-//       <SecondHeader />
-//     </div>
-//   );
-// };
-
-// export default SecondPage;
-
-
 import React, { useState } from 'react';
 import SecondHeader from './SecondHeader';
 
@@ -42,3 +28,4 @@ const SecondPage = () => {
 };
 
 export default SecondPage;
+
