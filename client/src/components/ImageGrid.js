@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const ImageGrid = () => {
   const [imageList, setImageList] = useState([]);
@@ -6,11 +6,11 @@ const ImageGrid = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await fetch('/images.json');
+        const response = await fetch("/images.json");
         const data = await response.json();
         setImageList(data.images);
       } catch (error) {
-        console.error('Error fetching images:', error);
+        console.error("Error fetching images:", error);
       }
     };
 

@@ -33,12 +33,11 @@ const SecondHeader = ({ onUpload, onSearch, setSearchQuery, onCreateAlbum }) => 
   };
 
   const handleSearch = () => {
-    // Call the onSearch function with the current search query
     onSearch();
   };
 
   const goHome = () => {
-    navigate("/"); // Assuming your homepage route is "/"
+    navigate("/");
   };
 
   return (
@@ -60,7 +59,6 @@ const SecondHeader = ({ onUpload, onSearch, setSearchQuery, onCreateAlbum }) => 
         Free tool for viewing cooking ingredients!
         </p>
 
-        {/* Create button */}
         <button className="btn-primary mr-4" onClick={handleCreate}>
           Create
         </button>
@@ -84,7 +82,6 @@ const SecondHeader = ({ onUpload, onSearch, setSearchQuery, onCreateAlbum }) => 
           onChange={(e) => setSearchQuery(e.target.value)}
         />
 
-        {/* Search button */}
         <button className="btn-primary ml-2" onClick={handleSearch}>
           Search
         </button>

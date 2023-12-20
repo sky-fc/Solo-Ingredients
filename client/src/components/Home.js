@@ -6,8 +6,6 @@ const Home = () => {
   return (
     <div >
       <Header />
-      <ImageGrid />
-      {/* Add the rest of your home page content here */}
     </div>
   );
 };

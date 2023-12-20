@@ -182,7 +182,7 @@ const SecondPage = () => {
   const handleCreateAlbum = (albumName) => {
     const newAlbum = { name: albumName, images: [] };
     setAlbums((prevAlbums) => [...prevAlbums, newAlbum]);
-    setSearchQuery(""); // Reset the search query when creating a new album
+    setSearchQuery("");
   };
 
   return (
@@ -193,7 +193,7 @@ const SecondPage = () => {
         }
         onSearch={handleSearch}
         setSearchQuery={setSearchQuery}
-        onCreateAlbum={handleCreateAlbum} // Pass the onCreateAlbum function
+        onCreateAlbum={handleCreateAlbum}
       />
       {nameError && <p className="text-red-500">{nameError}</p>}
       {descriptionError && <p className="text-red-500">{descriptionError}</p>}
