@@ -4,6 +4,7 @@ import Modal from "react-modal";
 
 const SecondPage = () => {
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [displayedImages, setDisplayedImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
