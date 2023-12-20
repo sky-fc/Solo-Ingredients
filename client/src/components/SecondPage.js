@@ -59,11 +59,13 @@ const SecondPage = () => {
     setUploadedImages((prevImages) => [...prevImages, ...filteredImages]);
   };
 
-  const handleDelete = (index) => {
-    setUploadedImages((prevImages) => {
-      const updatedImages = [...prevImages];
-      updatedImages.splice(index, 1);
-      return updatedImages;
+  const handleDelete = (albumIndex, imageIndex) => {
+    setAlbums((prevAlbums) => {
+      const updatedAlbums = [...prevAlbums];
+      const updatedImages = [...updatedAlbums[albumIndex].images];
+      updatedImages.splice(imageIndex, 1);
+      updatedAlbums[albumIndex].images = updatedImages;
+      return updatedAlbums;
     });
   };
 
@@ -183,7 +185,7 @@ const SecondPage = () => {
       {descriptionError && <p className="text-red-500">{descriptionError}</p>}
       {tagsError && <p className="text-red-500">{tagsError}</p>}
       <div className="mt-4 grid grid-cols-3 gap-4">
-        {albums.map((album) => (
+        {albums.map((album, albumIndex) => (
           <div key={album.name}>
             <h2 className="text-2xl font-bold mb-2">{album.name}</h2>
             {album.images.map((image, index) => (
@@ -196,7 +198,7 @@ const SecondPage = () => {
                 />
                 <button
                   className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded"
-                  onClick={() => handleDelete(index)}
+                  onClick={() => handleDelete(albumIndex, index)}
                 >
                   Delete
                 </button>
