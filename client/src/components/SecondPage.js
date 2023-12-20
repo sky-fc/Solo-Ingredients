@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
-import SecondHeader from './SecondHeader';
+import React, { useState } from "react";
+import SecondHeader from "./SecondHeader";
+import Modal from "react-modal";
 
 const SecondPage = () => {
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Function to handle image upload
   const handleUpload = (newImages) => {
@@ -18,6 +21,18 @@ const SecondPage = () => {
     });
   };
 
+  // Function to open modal and set the selected image
+  const openModal = (image) => {
+    setSelectedImage(image);
+    setIsModalOpen(true);
+  };
+
+  // Function to close modal
+  const closeModal = () => {
+    setSelectedImage(null);
+    setIsModalOpen(false);
+  };
+
   return (
     <div>
       <SecondHeader onUpload={handleUpload} />
@@ -28,7 +43,8 @@ const SecondPage = () => {
             <img
               src={image.data}
               alt={`Uploaded Image ${index + 1}`}
-              className="w-full h-48 object-cover"
+              className="w-full h-48 object-cover cursor-pointer"
+              onClick={() => openModal(image)}
             />
             <button
               className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded"
@@ -39,6 +55,31 @@ const SecondPage = () => {
           </div>
         ))}
       </div>
+
+      {/* Image Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        contentLabel="Selected Image"
+      >
+        {selectedImage && (
+          <div>
+            <img
+              src={selectedImage.data}
+              alt="Selected Image"
+              className="w-1/3 mx-auto"
+            />
+            <p className="mt-2">Filename: {selectedImage.file.name}</p>
+            {/* Add more information as needed */}
+          </div>
+        )}
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+          onClick={closeModal}
+        >
+          Close
+        </button>
+      </Modal>
     </div>
   );
 };
