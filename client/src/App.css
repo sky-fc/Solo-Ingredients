@@ -1,4 +1,18 @@
-.App {
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.btn-primary {
+  background-color: #3490dc;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem; /* Adjust as needed */
+  cursor: pointer;
+}
+
+
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +49,4 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */
