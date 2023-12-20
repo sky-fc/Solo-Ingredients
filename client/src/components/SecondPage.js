@@ -16,8 +16,17 @@ const SecondPage = () => {
   const [descriptionError, setDescriptionError] = useState("");
   const [tagsError, setTagsError] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [albums, setAlbums] = useState([]);
 
   const handleUpload = (newImages) => {
+    const albumName = prompt("Enter the name of the album:");
+    let selectedAlbum = albums.find((album) => album.name === albumName);
+
+    if (!selectedAlbum) {
+      selectedAlbum = { name: albumName, images: [] };
+      setAlbums((prevAlbums) => [...prevAlbums, selectedAlbum]);
+    }
+
     const imagesWithInfo = newImages.map((image) => {
       const name = prompt("Enter the name of the image:");
       const description = prompt("Enter the description of the image:");
@@ -46,6 +55,7 @@ const SecondPage = () => {
 
     const filteredImages = imagesWithInfo.filter((image) => image !== null);
 
+    selectedAlbum.images = [...selectedAlbum.images, ...filteredImages];
     setUploadedImages((prevImages) => [...prevImages, ...filteredImages]);
   };
 
@@ -142,20 +152,23 @@ const SecondPage = () => {
   };
 
   const handleSearch = () => {
-    // Perform the search based on the query
-    // You can modify this part to filter images as needed
     const filteredImages = uploadedImages.filter((image) => {
       const { name, description, tags } = image;
 
       return (
-        name.toLowerCase().includes(searchQuery) ||
-        description.toLowerCase().includes(searchQuery) ||
-        (tags && tags.join(", ").toLowerCase().includes(searchQuery))
+        name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (tags &&
+          tags.join(", ").toLowerCase().includes(searchQuery.toLowerCase()))
       );
     });
 
-    // Update the state with the filtered images
     setUploadedImages(filteredImages);
+  };
+
+  const handleCreateAlbum = (albumName) => {
+    const newAlbum = { name: albumName, images: [] };
+    setAlbums((prevAlbums) => [...prevAlbums, newAlbum]);
   };
 
   return (
@@ -164,25 +177,31 @@ const SecondPage = () => {
         onUpload={handleUpload}
         onSearch={handleSearch}
         setSearchQuery={setSearchQuery}
+        onCreateAlbum={handleCreateAlbum} // Pass the onCreateAlbum function
       />
       {nameError && <p className="text-red-500">{nameError}</p>}
       {descriptionError && <p className="text-red-500">{descriptionError}</p>}
       {tagsError && <p className="text-red-500">{tagsError}</p>}
       <div className="mt-4 grid grid-cols-3 gap-4">
-        {uploadedImages.map((image, index) => (
-          <div key={index} className="relative">
-            <img
-              src={image.data}
-              alt={`Uploaded Image ${index + 1}`}
-              className="w-full h-48 object-cover cursor-pointer"
-              onClick={() => openModal(image)}
-            />
-            <button
-              className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded"
-              onClick={() => handleDelete(index)}
-            >
-              Delete
-            </button>
+        {albums.map((album) => (
+          <div key={album.name}>
+            <h2 className="text-2xl font-bold mb-2">{album.name}</h2>
+            {album.images.map((image, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={image.data}
+                  alt={`Uploaded Image ${index + 1}`}
+                  className="w-full h-48 object-cover cursor-pointer"
+                  onClick={() => openModal(image)}
+                />
+                <button
+                  className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded"
+                  onClick={() => handleDelete(index)}
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
           </div>
         ))}
       </div>

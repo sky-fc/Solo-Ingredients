@@ -59,14 +59,18 @@
 
 // export default SecondHeader;
 
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const SecondHeader = ({ onUpload, onSearch, setSearchQuery }) => {
+const SecondHeader = ({ onUpload, onSearch, setSearchQuery, onCreateAlbum }) => {
   const navigate = useNavigate();
+  const [albumName, setAlbumName] = useState("");
 
   const handleCreate = () => {
-    console.log("Create button clicked");
+    const name = prompt("Enter the name of the album:");
+    if (name) {
+      onCreateAlbum(name);
+    }
   };
 
   const handleUpload = (event) => {
@@ -101,7 +105,8 @@ const SecondHeader = ({ onUpload, onSearch, setSearchQuery }) => {
         <h1 className="text-4xl font-bold mt-2">Your Project Title</h1>
         <p className="text-gray-600 text-sm mt-2">Your project description goes here.</p>
 
-        <button className="btn-primary mr-4" onClick={handleCreate}>
+       {/* Create button */}
+       <button className="btn-primary mr-4" onClick={handleCreate}>
           Create
         </button>
 
