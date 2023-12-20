@@ -1,64 +1,3 @@
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-
-// const SecondHeader = () => {
-//   const navigate = useNavigate();
-
-//   // Function to handle the 'Create' button click
-//   const handleCreate = () => {
-//     // Add the functionality for 'Create' button here
-//     console.log("Create button clicked");
-//   };
-
-//   // Function to handle the 'Upload' button click
-//   const handleUpload = () => {
-//     // Add the functionality for 'Upload' button here
-//     console.log("Upload button clicked");
-//   };
-
-//   // Function to handle the search bar input
-//   const handleSearch = (event) => {
-//     // Add the functionality for search bar here
-//     console.log("Search:", event.target.value);
-//   };
-
-//   return (
-//     <div className="text-center my-8">
-//       <div className="mt-4">
-//         <img
-//           src="/logo192.png"
-//           alt="Small Logo"
-//           className="w-12 h-12 mx-auto"
-//         />
-//         <h1 className="text-4xl font-bold mt-2">Your Project Title</h1>
-//         <p className="text-gray-600 text-sm mt-2">
-//           Your project description goes here.
-//         </p>
-
-//         {/* 'Create' button */}
-//         <button className="btn-primary mr-4" onClick={handleCreate}>
-//           Create
-//         </button>
-
-//         {/* 'Upload' button */}
-//         <button className="btn-primary mr-4" onClick={handleUpload}>
-//           Upload
-//         </button>
-
-//         {/* Search bar */}
-//         <input
-//           type="text"
-//           placeholder="Search..."
-//           className="border rounded px-2 py-1"
-//           onChange={handleSearch}
-//         />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default SecondHeader;
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -75,7 +14,7 @@ const SecondHeader = ({ onUpload, onSearch, setSearchQuery, onCreateAlbum }) => 
 
   const handleUpload = (event) => {
     const files = event.target.files;
-
+  
     if (files.length > 0) {
       const uploadedImages = Array.from(files).map((file) => {
         return new Promise((resolve) => {
@@ -86,9 +25,15 @@ const SecondHeader = ({ onUpload, onSearch, setSearchQuery, onCreateAlbum }) => 
           reader.readAsDataURL(file);
         });
       });
-
+  
       Promise.all(uploadedImages).then((images) => {
-        onUpload(images);
+        // Prompt the user to select an album
+        const albumName = prompt("Enter the name of the album:");
+        if (albumName) {
+          // Pass the selected album index to handleUpload in SecondPage.js
+          const albumIndex = -1; // Set to -1 to indicate that it's not applicable in SecondHeader.js
+          onUpload(images, albumIndex);
+        }
       });
     }
   };
@@ -118,9 +63,9 @@ const SecondHeader = ({ onUpload, onSearch, setSearchQuery, onCreateAlbum }) => 
           onChange={handleUpload}
           id="uploadInput"
         />
-        <label htmlFor="uploadInput" className="btn-primary mr-4">
+        {/* <label htmlFor="uploadInput" className="btn-primary mr-4">
           Upload
-        </label>
+        </label> */}
 
         <input
           type="text"
