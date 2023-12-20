@@ -1,15 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SecondHeader from "./SecondHeader";
 
 const SecondPage = () => {
   const [uploadedImages, setUploadedImages] = useState([]);
 
+  // Load images from localStorage on component mount
+  useEffect(() => {
+    const storedImages =
+      JSON.parse(localStorage.getItem("uploadedImages")) || [];
+    setUploadedImages(storedImages);
+  }, []);
+
   const handleUpload = (newImages) => {
-    setUploadedImages((prevImages) =>
-      [...prevImages, ...newImages].sort(
-        (a, b) => b.lastModified - a.lastModified
-      )
+    const updatedImages = [...uploadedImages, ...newImages].sort(
+      (a, b) => b.file.lastModified - a.file.lastModified
     );
+
+    // Save images to localStorage
+    localStorage.setItem("uploadedImages", JSON.stringify(updatedImages));
+
+    setUploadedImages(updatedImages);
   };
 
   return (
@@ -19,12 +29,14 @@ const SecondPage = () => {
       {/* Display uploaded images */}
       <div className="mt-4">
         {uploadedImages.map((image, index) => (
-          <img
-            key={index}
-            src={URL.createObjectURL(image)}
-            alt={`Uploaded Image ${index + 1}`}
-            className="w-48 h-auto object-cover m-2"
-          />
+          <div key={index}>
+            <img
+              src={image.objectURL}
+              alt={`Uploaded Image ${index + 1}`}
+              className="w-48 h-48 object-cover m-2"
+            />
+            <p>Upload Date: {image.uploadDate.toString()}</p>
+          </div>
         ))}
       </div>
 

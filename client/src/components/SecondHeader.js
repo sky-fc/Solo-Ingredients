@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SecondHeader = ({ onUpload }) => {
   const navigate = useNavigate();
@@ -8,23 +8,27 @@ const SecondHeader = ({ onUpload }) => {
   // Function to handle the 'Create' button click
   const handleCreate = () => {
     // Add the functionality for 'Create' button here
-    console.log("Create button clicked");
+    console.log('Create button clicked');
   };
 
   // Function to handle the 'Upload' button click
   const handleUpload = (event) => {
     const files = event.target.files;
-    const newImages = Array.from(files);
-
+    const newImages = Array.from(files).map((file) => ({
+      file,
+      uploadDate: new Date(),
+      objectURL: URL.createObjectURL(file), // Store the object URL directly
+    }));
+  
     setSelectedImages((prevImages) => [...prevImages, ...newImages]);
     onUpload(newImages);
-    console.log("Upload button clicked");
+    console.log('Upload button clicked');
   };
 
   // Function to handle the search bar input
   const handleSearch = (event) => {
     // Add the functionality for the search bar here
-    console.log("Search:", event.target.value);
+    console.log('Search:', event.target.value);
   };
 
   return (
@@ -48,13 +52,7 @@ const SecondHeader = ({ onUpload }) => {
         {/* 'Upload' button */}
         <label className="btn-primary mr-4">
           Upload
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleUpload}
-            style={{ display: "none" }}
-          />
+          <input type="file" accept="image/*" multiple onChange={handleUpload} style={{ display: 'none' }} />
         </label>
 
         {/* Search bar */}
